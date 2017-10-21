@@ -63,14 +63,40 @@ class HTMLEmail(object):
     def add_title(self,
                   title,
                   alignment = 'center',
-                  family_font = '',
-                  font_size = '',
-                  color = '',
-                  background_color = ''):
+                  font_family = 'Helvetica',
+                  font_size = '42px',
+                  color = '#1A1A1A',
+                  background_color = '#fefefe'):
         
         # Import html tags
         tags = CleanBeautifulSoup("templates/title.html")
         
+        # Modify the title
+        tags.h1.string = title
+        
+        # Modify the family font
+        tags.h1['style'] = re.sub(
+                pattern = 'font-family:Helvetica',
+                string = tags.h1['style'],
+                repl = 'font-family:' + font_family)
+        
+        # Modify the font size
+        tags.h1['style'] = re.sub(
+                pattern = 'font-size:[0-9]+px',
+                string = tags.h1['style'],
+                repl = 'font-size:' + font_size)
+        
+        # Modify the color
+        tags.h1['style'] = re.sub(
+                pattern = 'color:#1A1A1A',
+                string = tags.h1['style'],
+                repl = 'color:' + color)
+        
+        # Modify the background-color
+        tags.table['style'] = re.sub(
+                pattern = 'background:#fefefe',
+                string = tags.table['style'],
+                repl = 'background:' + background_color)
         
         # Append new tags
         self.soup.find("center", { "class" : "main_body" }).append(tags)
